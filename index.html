@@ -59,9 +59,11 @@
         }
 
         .chat-messages {
-            height: calc(100vh - 130px);
+            height: auto;
+            min-height: 200px;
             overflow-y: auto;
             padding: 20px;
+            padding-bottom: 10px;
             background-color: var(--light-gray);
         }
 
@@ -85,6 +87,7 @@
             border-radius: 8px;
             padding: 12px 16px;
             margin-top: 20px;
+            margin-bottom: 10px;
             font-size: 13px;
             font-style: italic;
             color: #4b5563;
@@ -98,32 +101,6 @@
             padding: 12px 16px;
             border-radius: 15px 15px 0 15px;
             margin-left: auto;
-        }
-
-        .quick-replies {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            padding: 0 10px;
-        }
-
-        .quick-reply-btn {
-            background-color: white;
-            border: 1px solid var(--primary-blue);
-            color: var(--primary-blue);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            margin-bottom: 8px;
-            white-space: nowrap;
-        }
-
-        .quick-reply-btn:hover {
-            background-color: var(--primary-blue);
-            color: white;
         }
 
         .chat-input {
@@ -195,13 +172,9 @@
                 max-width: 90%;
             }
 
-            .quick-reply-btn {
-                font-size: 13px;
-                padding: 6px 12px;
-            }
-
             .chat-messages {
-                height: calc(100vh - 130px);
+                height: auto;
+                min-height: 200px;
             }
         }
     </style>
@@ -215,19 +188,6 @@
         <div class="chat-messages" id="chat-messages">
             <div class="message bot-message">
                 Hello, I am your personal career bot. How can I help you today?
-            </div>
-            <div class="quick-replies">
-                <button class="quick-reply-btn">Career Change</button>
-                <button class="quick-reply-btn">Workplace Skills</button>
-                <button class="quick-reply-btn">Resume Development</button>
-                <button class="quick-reply-btn">LinkedIn</button>
-                <button class="quick-reply-btn">Search Strategies</button>
-                <button class="quick-reply-btn">Industry Specific Advice</button>
-                <button class="quick-reply-btn">Networking</button>
-                <button class="quick-reply-btn">Interview Preparation</button>
-                <button class="quick-reply-btn">Salary Negotiation</button>
-                <button class="quick-reply-btn">Professional Communication</button>
-                <button class="quick-reply-btn">Career Development</button>
             </div>
             <div class="disclaimer-message">
                 Disclaimer: This AI bot is intended to provide general information to support your career goals. Please use human judgment when incorporating ideas or suggestions and leverage the support of your Meridian coach.
