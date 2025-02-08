@@ -4,83 +4,310 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Chat Bot</title>
-    <!-- Previous CSS styles remain the same -->
+    <style>
+        :root {
+            --primary-blue: #1e4570;
+            --primary-gray: #6a696d;
+            --background: #ffffff;
+            --light-gray: #f8fafc;
+            --text-dark: #1a1a1a;
+            --border-color: #e5e9f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--background);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            background-color: var(--primary-gray);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            height: calc(100vh - 140px);
+            overflow-y: auto;
+            padding: 20px 20px 0 20px;
+            background-color: var(--light-gray);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+
+        .message:last-child {
+            margin-bottom: 0;
+        }
+
+        .bot-message {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 15px 15px 15px 0;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .disclaimer-message {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-size: 13px;
+            font-style: italic;
+            color: #4b5563;
+            line-height: 1.4;
+            max-width: 100%;
+        }
+
+        .user-message {
+            background-color: var(--primary-gray);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 15px 15px 0 15px;
+            margin-left: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 8px;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        button#send-button {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button#send-button:hover {
+            background-color: #15325c;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 8px 12px;
+            background-color: #e5e9f0;
+            border-radius: 15px 15px 15px 0;
+            margin-bottom: 8px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary-gray);
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: typing 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @media (max-width: 640px) {
+            .chat-container {
+                border-radius: 0;
+                height: 100vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-messages {
+                height: calc(100vh - 140px);
+            }
+
+            .chat-input {
+                padding: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="chat-container">
-        <!-- Previous HTML structure remains the same -->
+        <div class="chat-header">
+            <div class="logo">AI</div>
+            <h2>My AI Career Bot</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                Hello, I am your personal career bot. How can I help you today?
+            </div>
+            <div class="disclaimer-message">
+                Disclaimer: This AI bot is intended to provide general information to support your career goals. Please use human judgment when incorporating ideas or suggestions and leverage the support of your Meridian coach.
+            </div>
+            <div class="typing-indicator" id="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
         <div class="chat-input">
             <input type="text" placeholder="Type your message..." id="user-input">
-            <button id="send-button" onclick="sendMessage()">Send</button>
+            <button id="send-button">Send</button>
         </div>
     </div>
 
     <script>
-        const chatMessages = document.getElementById('chat-messages');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
-        const typingIndicator = document.getElementById('typing-indicator');
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const typingIndicator = document.getElementById('typing-indicator');
 
-        // Handle Enter key press
-        userInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
+            // Handle send button click
+            sendButton.addEventListener('click', handleMessage);
+
+            // Handle Enter key press
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleMessage();
+                }
+            });
+
+            function handleMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+
+                // Add user message
+                addMessage(message, 'user-message');
+                userInput.value = '';
+
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Simulate bot response after a delay
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    const botResponse = getBotResponse(message);
+                    addMessage(botResponse, 'bot-message');
+                }, 1500);
+            }
+
+            function addMessage(text, className) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${className}`;
+                messageDiv.textContent = text;
+                chatMessages.insertBefore(messageDiv, typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function getBotResponse(message) {
+                const messageL = message.toLowerCase();
+
+                // Career Change responses
+                if (messageL.includes('career change') || messageL.includes('switch career') || messageL.includes('new career')) {
+                    return "I can help you explore career transition options. To get started, could you tell me about your current role and what type of career change you're considering? Consider factors like your skills, interests, and target industries.";
+                }
+
+                // Resume responses
+                if (messageL.includes('resume') || messageL.includes('cv')) {
+                    return "I can help you optimize your resume. Would you like advice on: 1) Resume formatting and structure 2) Highlighting achievements 3) Using industry-specific keywords 4) Tailoring your resume for specific roles? Let me know which area you'd like to focus on.";
+                }
+
+                // LinkedIn responses
+                if (messageL.includes('linkedin')) {
+                    return "LinkedIn is crucial for professional networking. I can provide guidance on: 1) Profile optimization 2) Building your network 3) Creating engaging content 4) Using LinkedIn for job search. Which aspect would you like to explore?";
+                }
+
+                // Interview responses
+                if (messageL.includes('interview')) {
+                    return "I can help you prepare for interviews. Would you like advice on: 1) Common interview questions 2) STAR method responses 3) Questions to ask employers 4) Virtual interview tips? Let me know your specific interview preparation needs.";
+                }
+
+                // Salary negotiation responses
+                if (messageL.includes('salary') || messageL.includes('compensation') || messageL.includes('pay')) {
+                    return "Salary negotiation is an important skill. Would you like guidance on: 1) Researching market rates 2) Timing your negotiation 3) Making a compelling case 4) Handling counter-offers? What specific aspect interests you?";
+                }
+
+                // Networking responses
+                if (messageL.includes('network') || messageL.includes('networking')) {
+                    return "Professional networking is key to career growth. Would you like tips on: 1) Building professional relationships 2) Finding networking events 3) Online networking strategies 4) Following up with contacts? Which area would you like to focus on?";
+                }
+
+                // Skills development responses
+                if (messageL.includes('skill') || messageL.includes('learn') || messageL.includes('training')) {
+                    return "I can help you identify and develop key skills. Would you like to discuss: 1) In-demand skills in your industry 2) Learning resources and platforms 3) Certification options 4) Skill assessment methods? What's your primary focus?";
+                }
+
+                // Job search responses
+                if (messageL.includes('job search') || messageL.includes('find job') || messageL.includes('looking for job')) {
+                    return "I can help optimize your job search strategy. Would you like advice on: 1) Job search platforms 2) Company research 3) Application strategies 4) Working with recruiters? Which aspect interests you most?";
+                }
+
+                // Default response
+                return "I can assist you with various career-related topics including resume writing, interviewing, networking, salary negotiation, career transitions, and professional development. What specific area would you like to explore?";
             }
         });
-
-        function sendMessage() {
-            const message = userInput.value.trim();
-            if (message === '') return;
-
-            // Add user message
-            addMessage(message, 'user-message');
-            userInput.value = '';
-
-            // Show typing indicator
-            typingIndicator.style.display = 'block';
-
-            // Simulate bot response after a delay
-            setTimeout(() => {
-                typingIndicator.style.display = 'none';
-                const botResponse = getBotResponse(message);
-                addMessage(botResponse, 'bot-message');
-            }, 1000);
-        }
-
-        function addMessage(text, className) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${className}`;
-            messageDiv.textContent = text;
-            chatMessages.insertBefore(messageDiv, typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function getBotResponse(message) {
-            // Basic response logic
-            const messageL = message.toLowerCase();
-            
-            if (messageL.includes('resume')) {
-                return "I can help you with resume development. What specific aspect of your resume would you like to improve?";
-            }
-            else if (messageL.includes('interview')) {
-                return "I can provide interview preparation tips. Would you like advice on common questions, preparation strategies, or interview etiquette?";
-            }
-            else if (messageL.includes('career change')) {
-                return "Career transitions can be challenging. Let's discuss your interests, skills, and potential new career paths. What industry are you interested in?";
-            }
-            else if (messageL.includes('salary')) {
-                return "I can help with salary negotiation strategies. Would you like tips on researching salary ranges or negotiation techniques?";
-            }
-            else if (messageL.includes('linkedin')) {
-                return "I can help optimize your LinkedIn profile. Would you like tips on profile optimization, networking, or content strategy?";
-            }
-            else if (messageL.includes('network')) {
-                return "Networking is crucial for career growth. Would you like tips on professional networking, building relationships, or finding networking events?";
-            }
-            else {
-                return "I'm here to help with your career-related questions. Could you please provide more specific details about what you'd like to know?";
-            }
-        }
     </script>
 </body>
 </html>
