@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Chat Bot</title>
+    <style>
+        :root {
+            --primary-blue: #1e4570;
+            --primary-gray: #6a696d;
+            --background: #ffffff;
+            --light-gray: #f8fafc;
+            --text-dark: #1a1a1a;
+            --border-color: #e5e9f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--background);
+        }
+
+        .chat-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            background-color: var(--primary-gray);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            height: calc(100vh - 130px);
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--light-gray);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 15px 15px 15px 0;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .disclaimer-message {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            font-size: 13px;
+            font-style: italic;
+            color: #4b5563;
+            line-height: 1.4;
+            max-width: 100%;
+        }
+
+        .user-message {
+            background-color: var(--primary-gray);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 15px 15px 0 15px;
+            margin-left: auto;
+        }
+
+        .quick-replies {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        .quick-reply-btn {
+            background-color: white;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+        }
+
+        .quick-reply-btn:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        button#send-button {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button#send-button:hover {
+            background-color: #15325c;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background-color: #e5e9f0;
+            border-radius: 15px 15px 15px 0;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-gray);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: typing 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 640px) {
+            .chat-container {
+                border-radius: 0;
+                height: 100vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+
+            .quick-reply-btn {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+
+            .chat-messages {
+                height: calc(100vh - 130px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="logo">AI</div>
+            <h2>My AI Career Bot</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                Hello, I am your personal career bot. How can I help you today?
+            </div>
+            <div class="quick-replies">
+                <button class="quick-reply-btn">Career Change</button>
+                <button class="quick-reply-btn">Workplace Skills</button>
+                <button class="quick-reply-btn">Resume Development</button>
+                <button class="quick-reply-btn">LinkedIn</button>
+                <button class="quick-reply-btn">Search Strategies</button>
+                <button class="quick-reply-btn">Industry Specific Advice</button>
+                <button class="quick-reply-btn">Networking</button>
+                <button class="quick-reply-btn">Interview Preparation</button>
+                <button class="quick-reply-btn">Salary Negotiation</button>
+                <button class="quick-reply-btn">Professional Communication</button>
+                <button class="quick-reply-btn">Career Development</button>
+            </div>
+            <div class="disclaimer-message">
+                Disclaimer: This AI bot is intended to provide general information to support your career goals. Please use human judgment when incorporating ideas or suggestions and leverage the support of your Meridian coach.
+            </div>
+            <div class="typing-indicator" id="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type your message..." id="user-input">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+</body>
+</html>
